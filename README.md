@@ -10,9 +10,9 @@
 
 (официальные сайты)
 1. Python: https://www.python.org/downloads/
-2. Для запуска локального LLM: Ollama с https://ollama.com/download
+2. Для запуска локального LLM используем Ollama: https://ollama.com/download
 
-3. Установка локальной модели (ниже написано, почему именно она):
+3. Установка локальной модели (ниже написано, почему именно эта модель):
 ```bash
 ollama run dolphin-mixtral:8x7b
 ```
