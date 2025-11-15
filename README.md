@@ -1,2 +1,42 @@
 # Lerche
-The project that aims to create an LLM that includes: TTS, Screen Recognition, Real-Time Dialog Mode with Voice Recognition. The project is named after the character with artificial intelligence in the light novel 86 - Eighty-Six
+
+Проект, целью которого является создание LLM, который включает в себя: распознавание экрана (и текста), TTS (Text-To-Speech), диалоговый режим в реальном времени с распознаванием голоса.
+
+# Как начать?
+
+## Предварительные требования и установка
+
+**Проект рассчитан на ПК мощности 16 и более GB оперативной памяти**
+
+(официальные сайты)
+1. Python: https://www.python.org/downloads/
+2. Для запуска локального LLM: Ollama с https://ollama.com/download
+
+3. Установка локальной модели (ниже написано, почему именно она):
+```bash
+ollama run dolphin-mixtral:8x7b
+```
+
+3. Установите `uv`, чтобы удобнее и быстрее устанавливать зависимости.
+```bash
+pip install ui
+```
+
+4. Для установки всех зависимостей из lock-файла используйте:
+```bash
+uv sync
+```
+
+## Использование
+
+...
+
+
+# Другое / Разное
+
+Проект назван в честь персонажа с искусственным интеллектом из лайт-новеллы 86 - Eighty-Six
+
+## Почему именно dolphin-mixtral?
+
+Это — самая "человечная" и разговорчивая модель из доступных в Ollama. Mixtral 8x7B - это архитектура "смеси экспертов", а Dolphin - её дообученная версия, снявшая многие ограничения и получившая яркую, разговорную личность. Более подробно: https://ollama.com/library/dolphin-mixtral
+
