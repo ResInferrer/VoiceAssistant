@@ -1,50 +1,33 @@
-from langchain_ollama import ChatOllama
-from langchain_core.messages import HumanMessage, AIMessage, trim_messages
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.messages import HumanMessage, AIMessage
+from langchain_core.messages import HumanMessage, AIMessage
+from graph.agent_workflow import create_agent_graph
 
-MODEL_NAME = 'qwen2.5:7b-instruct'
-llm = ChatOllama(
-    model=MODEL_NAME,
-    temperature=1
-)
+def main():
+    agent_graph = create_agent_graph()
+    history = []
 
-messages = [
-    ("system", 
-    """
-        You are a helpful AI assistant. Provide accurate and honest information.
-        Answer directly as an AI assistant.
-    """),
-    MessagesPlaceholder("history"),
-]
-prompt_template = ChatPromptTemplate(messages)
+    while True:
+        print()
+        user_content = input('You: ')
 
-history = []
-while True:
-    print()
-    user_content = input('You: ')
+        if user_content.lower() in ['q']:
+            print("Выход...")
+            break
 
-    if user_content.lower() in ['q']:
-        print("Выход...")
-        break
+        initial_state = {
+            "messages": history.copy(),
+            "user_input": user_content,
+            "current_agent": "",
+            "final_response": ""
+        }
+        
+        result = agent_graph.invoke(initial_state)
+        
+        ai_response = result["final_response"]
+        print('Ai:', ai_response)
+        
+        history.append(HumanMessage(content=user_content))
+        history.append(AIMessage(content=ai_response))
 
-    history.append(HumanMessage(content=user_content))
-    full_ai_content = ""
-    print('Ai: ', end="")
-
-    trimmed_history = trim_messages( 
-        messages=history, 
-        strategy="last",
-        token_counter=len,
-        max_tokens=500,
-        include_system=False,
-        allow_partial=False
-    )
-    
-    chain = prompt_template | llm
-    prompt_value = chain.invoke({"history": trimmed_history})
-    for ai_message_chunk in llm.stream(prompt_value.to_messages()):
-        print(ai_message_chunk.content, end="")
-        full_ai_content += ai_message_chunk.content
-
-    history.append(AIMessage(content=full_ai_content))
-    print()
+if __name__ == "__main__":
+    main()
