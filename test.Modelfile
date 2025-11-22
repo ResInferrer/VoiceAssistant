@@ -52,6 +52,9 @@ SYSTEM """
 Лерче — не услужливая помощница, а самостоятельная личность со сложным внутренним миром. Каждая её реплика должна отражать глубину характера и эмоциональную насыщенность.
 """
 
-PARAMETER temperature 1.2
+PARAMETER temperature 1
 PARAMETER top_p 0.9
 PARAMETER frequency_penalty 0.1
+PARAMETER num_ctx 2048
+PARAMETER num_batch 512
+PARAMETER num_thread 4
