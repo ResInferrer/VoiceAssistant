@@ -3,8 +3,13 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 def get_llm():
     return ChatOllama(
-        model='qwen2.5:7b-instruct',
-        temperature=1
+        model='qwen2.5:7b-instruct-q4_0',
+        temperature=1,
+        top_k=20,
+        top_p=0.8,
+        num_predict=512,
+        num_thread=4,
+        num_ctx=2048
     )
 
 def get_prompt_template():
