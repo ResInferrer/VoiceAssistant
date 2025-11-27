@@ -6,9 +6,15 @@ def main():
     agent_graph = create_agent_graph()
     history = []
 
+    mode_choice = input("Режим ввода: [1] голос / [2] текст: ")
+
     while True:
         print()
-        user_content = input('You: ')
+
+        if mode_choice == "1":
+            user_content = "[голосовой ввод]"  # Plug for SST
+        else:
+            user_content = input('You: ')
 
         if user_content.lower() in ['q']:
             print("Выход...")
@@ -18,11 +24,11 @@ def main():
             "messages": history.copy(),
             "user_input": user_content,
             "current_agent": "",
-            "final_response": ""
+            "final_response": "",
+            "mode": mode_choice
         }
         
         full_response = ""
-        print('AI: ', end='', flush=True)
         
         for chunk in agent_graph.stream(initial_state):
             for key, value in chunk.items():

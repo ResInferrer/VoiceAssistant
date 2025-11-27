@@ -10,6 +10,26 @@ class AgentState(TypedDict):
     user_input: str                                       # Current user data
     current_agent: str                                    # Which agent is currently working
     final_response: str
+    mode: str
+
+def orchestrator_agent(state: AgentState):
+    # todo: llm logic
+    mode = state.get("mode", "2")
+    if mode == "1":
+        return {"current_agent": "sst"}
+    else:
+        return {"current_agent": "general"}
+
+def orchestrator_decision(state: AgentState):
+    return state["current_agent"]
+
+def sst_agent(state: AgentState):
+    # sst logic
+    test_input = input("(Голосовой режим) Введите текст для имитации: ")
+    return {
+        "current_agent": "general_agent",
+        "user_input": test_input
+    }
 
 def general_agent(state: AgentState):
     llm = get_llm()
@@ -45,12 +65,24 @@ def tts_agent(state: AgentState):
 
 def create_agent_graph():
     workflow = StateGraph(AgentState) 
+    workflow.add_node("orchestrator_agent", orchestrator_agent) 
+    workflow.add_node("sst_agent", sst_agent) 
     workflow.add_node("general_agent", general_agent) 
     workflow.add_node("tts_agent", tts_agent) 
 
-    workflow.set_entry_point("general_agent")
+    workflow.set_entry_point("orchestrator_agent")
 
-    workflow.add_edge(START, "general_agent")
+    workflow.add_conditional_edges(
+        "orchestrator_agent",
+        orchestrator_decision,
+        {
+            "sst": "sst_agent",
+            "general": "general_agent", 
+            "end": END
+        }
+    )
+
+    workflow.add_edge("sst_agent", "general_agent")
     workflow.add_edge("general_agent", "tts_agent")
     workflow.add_edge("tts_agent", END)
 
