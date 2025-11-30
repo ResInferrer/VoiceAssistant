@@ -9,7 +9,7 @@ from langchain_core.messages import BaseMessage
 from config.llm_config import get_llm, get_prompt_template
 from pyttsx3 import init
 
-#_VISUALIZATION_DONE = True
+_VISUALIZATION = True
 
 class AgentState(TypedDict):
     messages: Annotated[list[BaseMessage], operator.add]  # Conversation history
@@ -119,7 +119,8 @@ def create_agent_graph():
     workflow.add_edge("tts_agent", END)
 
     # Visualization
-    #if _VISUALIZATION_DONE:
+    #global _VISUALIZATION
+    #if _VISUALIZATION:
     #    with open("agent_workflow_architecture.png", "wb") as f:
     #        f.write(graph.get_graph().draw_mermaid_png())
     #    _VISUALIZATION = False
