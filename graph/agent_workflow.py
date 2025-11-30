@@ -1,9 +1,15 @@
-from langgraph.graph import StateGraph, END, START
+import operator
+import json 
+
+import pyaudio
+from vosk import Model, KaldiRecognizer
+from langgraph.graph import StateGraph, END
 from typing import TypedDict, Annotated
 from langchain_core.messages import BaseMessage
 from config.llm_config import get_llm, get_prompt_template
 from pyttsx3 import init
-import operator
+
+#_VISUALIZATION_DONE = True
 
 class AgentState(TypedDict):
     messages: Annotated[list[BaseMessage], operator.add]  # Conversation history
@@ -14,36 +20,60 @@ class AgentState(TypedDict):
 
 def orchestrator_agent(state: AgentState):
     # todo: llm logic
-    mode = state.get("mode", "2")
+    mode = state.get("mode", "1")
     if mode == "1":
-        return {"current_agent": "sst"}
+        return {"current_agent": "text"}
     else:
-        return {"current_agent": "general"}
+        return {"current_agent": "sst"}
 
 def orchestrator_decision(state: AgentState):
     return state["current_agent"]
 
-def sst_agent(state: AgentState):
-    # sst logic
-    test_input = input("(Голосовой режим) Введите текст для имитации: ")
-    return {
-        "current_agent": "general_agent",
-        "user_input": test_input
-    }
+
+def user_input_sst_agent(state: AgentState):
+    model = Model('vosk_models/vosk-model-small-ru-0.22')
+    rec = KaldiRecognizer(model, 16000)
+    p = pyaudio.PyAudio()
+    stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8000)
+    stream.start_stream()
+
+    def listen():
+        while True:
+            data = stream.read(4000, exception_on_overflow=False)
+            if (rec.AcceptWaveform(data)) and (len(data)) > 0:
+                answer = json.loads(rec.Result())
+                if answer['text']:
+                    yield answer['text']
+    
+    for text in listen():
+        print(f"sst I: {text}")
+        
+        if text.lower() == "выход":
+            print("Выход...")
+            quit()
+        else:
+            return {"user_input": text}
+
+def user_input_text_agent(state: AgentState):
+    user_input = input("text I: ")
+    if user_input == "выход":
+        print("Выход...")
+        quit()
+    else:
+        return {"user_input": user_input}
+
 
 def general_agent(state: AgentState):
     llm = get_llm()
     prompt_template = get_prompt_template()
     chain = prompt_template | llm
+
     response = chain.invoke({
         "history": state['messages'],
-        "user_input": state['user_input']
+        "user_input": state.get("user_input")
     })
     
-    return {
-        "final_response": response.content,
-        "current_agent": "tts_agent"
-    }
+    return {"final_response": response.content}
 
 
 def tts_agent(state: AgentState):
@@ -66,7 +96,8 @@ def tts_agent(state: AgentState):
 def create_agent_graph():
     workflow = StateGraph(AgentState) 
     workflow.add_node("orchestrator_agent", orchestrator_agent) 
-    workflow.add_node("sst_agent", sst_agent) 
+    workflow.add_node("user_input_sst_agent", user_input_sst_agent) 
+    workflow.add_node("user_input_text_agent", user_input_text_agent)
     workflow.add_node("general_agent", general_agent) 
     workflow.add_node("tts_agent", tts_agent) 
 
@@ -76,19 +107,22 @@ def create_agent_graph():
         "orchestrator_agent",
         orchestrator_decision,
         {
-            "sst": "sst_agent",
-            "general": "general_agent", 
+            "sst": "user_input_sst_agent",
+            "text": "user_input_text_agent", 
             "end": END
         }
     )
 
-    workflow.add_edge("sst_agent", "general_agent")
+    workflow.add_edge("user_input_sst_agent", "general_agent")
+    workflow.add_edge("user_input_text_agent", "general_agent")
     workflow.add_edge("general_agent", "tts_agent")
     workflow.add_edge("tts_agent", END)
 
     # Visualization
+    #if _VISUALIZATION_DONE:
+    #    with open("agent_workflow_architecture.png", "wb") as f:
+    #        f.write(graph.get_graph().draw_mermaid_png())
+    #    _VISUALIZATION = False
+    
     graph = workflow.compile()
-    with open("agent_workflow_architecture.png", "wb") as f:
-        f.write(graph.get_graph().draw_mermaid_png())
-
     return graph
