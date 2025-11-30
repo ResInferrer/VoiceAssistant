@@ -15,8 +15,8 @@ class AgentState(TypedDict):
     messages: Annotated[list[BaseMessage], operator.add]  # Conversation history
     user_input: str                                       # Current user data
     current_agent: str                                    # Which agent is currently working
-    final_response: str
-    mode: str
+    final_response: str                                   # Ready and final answer from LLM
+    mode: str                                             # either voice input (2) or text input (1) from the user
 
 def orchestrator_agent(state: AgentState):
     # todo: llm logic
@@ -78,7 +78,7 @@ def general_agent(state: AgentState):
 
 def tts_agent(state: AgentState):
     final_text = state["final_response"]
-    engine = init("sapi5")
+    engine = init("sapi5") # for Windows
 
     # Set voice properties (optional)
     voices = engine.getProperty('voices')
