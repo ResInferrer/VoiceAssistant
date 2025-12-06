@@ -24,13 +24,13 @@ def orchestrator_agent(state: AgentState):
     if mode == "1":
         return {"current_agent": "text"}
     else:
-        return {"current_agent": "sst"}
+        return {"current_agent": "stt"}
 
 def orchestrator_decision(state: AgentState):
     return state["current_agent"]
 
 
-def user_input_sst_agent(state: AgentState):
+def user_input_stt_agent(state: AgentState):
     model = Model('vosk_models/vosk-model-small-ru-0.22')
     rec = KaldiRecognizer(model, 16000)
     p = pyaudio.PyAudio()
@@ -46,7 +46,7 @@ def user_input_sst_agent(state: AgentState):
                     yield answer['text']
     
     for text in listen():
-        print(f"sst I: {text}")
+        print(f"stt I: {text}")
         
         if text.lower() == "выход":
             print("Выход...")
@@ -96,7 +96,7 @@ def tts_agent(state: AgentState):
 def create_agent_graph():
     workflow = StateGraph(AgentState) 
     workflow.add_node("orchestrator_agent", orchestrator_agent) 
-    workflow.add_node("user_input_sst_agent", user_input_sst_agent) 
+    workflow.add_node("user_input_stt_agent", user_input_stt_agent) 
     workflow.add_node("user_input_text_agent", user_input_text_agent)
     workflow.add_node("general_agent", general_agent) 
     workflow.add_node("tts_agent", tts_agent) 
@@ -107,13 +107,13 @@ def create_agent_graph():
         "orchestrator_agent",
         orchestrator_decision,
         {
-            "sst": "user_input_sst_agent",
+            "stt": "user_input_stt_agent",
             "text": "user_input_text_agent", 
             "end": END
         }
     )
 
-    workflow.add_edge("user_input_sst_agent", "general_agent")
+    workflow.add_edge("user_input_stt_agent", "general_agent")
     workflow.add_edge("user_input_text_agent", "general_agent")
     workflow.add_edge("general_agent", "tts_agent")
     workflow.add_edge("tts_agent", END)
