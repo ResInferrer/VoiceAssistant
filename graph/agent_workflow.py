@@ -118,12 +118,16 @@ def create_agent_graph():
     workflow.add_edge("general_agent", "tts_agent")
     workflow.add_edge("tts_agent", END)
 
-    # Visualization
-    #global _VISUALIZATION
-    #if _VISUALIZATION:
-    #    with open("agent_workflow_architecture.png", "wb") as f:
-    #        f.write(graph.get_graph().draw_mermaid_png())
-    #    _VISUALIZATION = False
-    
     graph = workflow.compile()
+
+    # Visualization. 
+    # To see, go to the website https://mermaid.live/ 
+    # and copy the code from agent_workflow_architecture.mmd
+    global _VISUALIZATION
+    if _VISUALIZATION:
+        mermaid_code = graph.get_graph().draw_mermaid()
+        with open("agent_workflow_architecture.mmd", "w", encoding="utf-8") as f:
+            f.write(mermaid_code)
+        _VISUALIZATION = False
+    
     return graph
