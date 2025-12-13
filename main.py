@@ -1,12 +1,9 @@
 from langchain_core.messages import HumanMessage, AIMessage
-from langchain_core.messages import HumanMessage, AIMessage
 from graph.agent_workflow import create_agent_graph
 
 def main():
     agent_graph = create_agent_graph()
     history = []
-
-    mode_choice = input("Режим ввода: [2] голос / [1] текст: ")
 
     while True:
         print()
@@ -16,7 +13,8 @@ def main():
             "user_input": "",
             "current_agent": "",
             "final_response": "",
-            "mode": mode_choice
+            "plan": "",
+            "input_mode": ""
         }
         
         full_response = ""
