@@ -9,8 +9,10 @@ from langchain_core.messages import BaseMessage
 from config.llm_config import get_llm, get_prompt_template
 from pyttsx3 import init
 
-_WORKFLOW_COMPILE = False
-_FIRST_RUNNING = True
+_WORKFLOW_COMPILE = False # todo: docs
+_FIRST_RUNNING = True # todo: docs
+
+# todo: docs
 _AGENT_REGISTRY = {
     "test": 
         {
@@ -139,7 +141,7 @@ def tts_agent(state: AgentState):
     # Set voice properties (optional)
     voices = engine.getProperty('voices')
     engine.setProperty('voice', voices[0].id)
-    engine.setProperty('rate', 150) # Speed
+    engine.setProperty('rate', 150) # two arg is speed of speech
 
     engine.say(final_text)
     engine.runAndWait()
@@ -173,6 +175,7 @@ def create_agent_graph():
         {
             "test_agent": "test_agent", #test
             # ... modular agents
+
             "general_agent": "general_agent",
             "end": END
         }
