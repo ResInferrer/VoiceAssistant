@@ -18,6 +18,7 @@ def get_llm(task: str) -> ChatOllama:
             num_thread=4,
             num_ctx=2048
             )
+
     elif task == "dispatcher":
         return ChatOllama(
             model='qwen2.5:7b-instruct-q4_0',
@@ -28,6 +29,7 @@ def get_llm(task: str) -> ChatOllama:
             num_thread=4,
             num_ctx=512
             )
+
     else:
         print("exception") # Todo: Exception  
 
@@ -42,21 +44,39 @@ def get_prompt_template(task: str) -> ChatPromptTemplate:
         messages = [
             ("system", 
             """
-                You are a helpful AI assistant. Provide accurate and honest information.
+                Ты ассистент-помощник. Твоя обязанность - помогать пользователю.
             """),
             MessagesPlaceholder("history"),
             ("human", "{user_input}")
         ]
         return ChatPromptTemplate.from_messages(messages) 
+
     elif task == "dispatcher":
         messages = [
             ("system", 
             """
-                Task of dispatcher...
+                Роль: ты - диспетчер-маршрутизатор. Твоя единственная задача - проанализировать запрос пользователя и определить, какому агенту его передать.
+                Правила:
+                1. Анализ: Сравни смысл запроса пользователя со списком доступных задач агентов и их описания (ниже).
+                2. Сопоставление: Если запрос точно соответствует описанию задачи одного из агентов - используй эту задачу.
+                3. Выбор: Если подходит только одна задача - выбери её. Если подходят несколько задач - выбирай всех. Не повторяй одни и те же действия.
+                4. Формат ответа - всегда строгий JSON. Никаких пояснений, только JSON-объект.
+
+                Доступные задачи и агенты (в формате "название действия": "описание" -> "агент действия"):
+                - test: "В запросе пользователя будет слово "тест" " -> test_agent
+
+                Критически важные инструкции по формату:
+                - "название действия" - брать строго из списка выше (например, input_user)!
+                - "агент действия" - брать строго из списка выше (например, input_user_agent)!
+                - Не придумывай новые названия и имена агентов.
+                - Если запрос НЕ подходит ни под одну задачу - верни пустой объект: {{}}.
+
+                Шаблон вывода (твой ответ - только это):
+                {{"название действия": {{"agent": "агент действия"}}}}
             """),
-            MessagesPlaceholder("history"),
             ("human", "{user_input}")
         ]
         return ChatPromptTemplate.from_messages(messages) 
+
     else:
         print("exception") # Todo: Exception  
