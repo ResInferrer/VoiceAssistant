@@ -25,7 +25,7 @@ class AgentState(TypedDict):
     user_input: str                                       # Current user data
     current_agent: str                                    # Which agent is currently working
     final_response: str                                   # Ready and final answer from LLM
-    plan: Dict[str, Dict[str, Any]]                       # The plan from LLM. It is necessary for a structured execution plan in 
+    plan: Dict[str, Dict[str, str]]                       # The plan from LLM. It is necessary for a structured execution plan in 
     input_mode: str
 
 
