@@ -175,8 +175,7 @@ def create_agent_graph():
             # ... modular agents
 
             "orchestrator_agent": "orchestrator_agent", # In case of any error in the plan recreate the plan
-            "general_agent": "general_agent",
-            "end": END
+            "general_agent": "general_agent"
         }
     )
 

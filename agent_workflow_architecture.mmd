@@ -15,7 +15,6 @@ graph TD;
 	__start__ --> user_input_agent;
 	general_agent --> tts_agent;
 	orchestrator_agent --> plan_executor_agent;
-	plan_executor_agent -. &nbsp;end&nbsp; .-> __end__;
 	plan_executor_agent -.-> general_agent;
 	plan_executor_agent -.-> orchestrator_agent;
 	plan_executor_agent -.-> test_agent;
