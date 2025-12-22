@@ -102,10 +102,8 @@ def plan_executor_agent(state: AgentState):
     keys_agent_registry = list(_AGENT_REGISTRY.keys())
     if current_step not in keys_agent_registry:
         print("error-plan_executor_agent") #todo: Exception
-        first_key = next(iter(execution_plan))
-        execution_plan.pop(first_key)
 
-        return  {"current_agent": "end"}
+        return  {"current_agent": "orchestrator_agent"}
 
     agent_info = _AGENT_REGISTRY[current_step]
     current_agent = agent_info["agent"]
@@ -152,7 +150,7 @@ def tts_agent(state: AgentState):
     return {"current_agent": "end"}
 
 
-def test_agent(state: AgentState):
+def test_agent(state: AgentState): # todo: Screen Analysis
     print("test!")
 
 
@@ -163,7 +161,7 @@ def create_agent_graph():
     workflow.add_node("user_input_agent", user_input_agent) 
     workflow.add_node("general_agent", general_agent) 
     workflow.add_node("tts_agent", tts_agent) 
-    workflow.add_node("test_agent", test_agent)#test
+    workflow.add_node("test_agent", test_agent) # todo: Screen Analysis
 
     workflow.set_entry_point("user_input_agent")
     workflow.add_edge("user_input_agent", "orchestrator_agent")
@@ -173,15 +171,16 @@ def create_agent_graph():
         "plan_executor_agent",
         route_after_plan_executor,
         {
-            "test_agent": "test_agent", #test
+            "test_agent": "test_agent", # todo: Screen Analysis
             # ... modular agents
 
+            "orchestrator_agent": "orchestrator_agent", # In case of any error in the plan recreate the plan
             "general_agent": "general_agent",
             "end": END
         }
     )
 
-    workflow.add_edge("test_agent", "plan_executor_agent") #test
+    workflow.add_edge("test_agent", "plan_executor_agent") # todo: Screen Analysis
     # ... modular agents
 
     workflow.add_edge("general_agent", "tts_agent")

@@ -31,7 +31,7 @@ def get_llm(task: str) -> ChatOllama:
             )
 
     else:
-        print("exception") # Todo: Exception  
+        print("exception") # todo: Exception  
 
 def get_prompt_template(task: str) -> ChatPromptTemplate:
     """
@@ -51,7 +51,7 @@ def get_prompt_template(task: str) -> ChatPromptTemplate:
         ]
         return ChatPromptTemplate.from_messages(messages) 
 
-    elif task == "dispatcher":
+    elif task == "dispatcher": # todo: Structured Output use
         messages = [
             ("system", 
             """
