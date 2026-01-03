@@ -18,27 +18,29 @@ https://img.shields.io/badge/License-MIT-yellow.svg
 
 Проект построен вокруг графа агентов LangGraph, что обеспечивает гибкость, наблюдаемость и контроль над потоком выполнения.
 
-graph TD;
-	__start__([<p>__start__</p>]):::first
-	orchestrator_agent(orchestrator_agent)
-	plan_executor_agent(plan_executor_agent)
-	user_input_agent(user_input_agent)
-	general_agent(general_agent)
-	tts_agent(tts_agent)
-	test_agent(test_agent)
-	__end__([<p>__end__</p>]):::last
-	__start__ --> user_input_agent;
-	general_agent --> tts_agent;
-	orchestrator_agent --> plan_executor_agent;
-	plan_executor_agent -.-> general_agent;
-	plan_executor_agent -.-> orchestrator_agent;
-	plan_executor_agent -.-> test_agent;
-	test_agent --> plan_executor_agent;
-	user_input_agent --> orchestrator_agent;
-	tts_agent --> __end__;
-	classDef default fill:#f2f0ff,line-height:1.2
-	classDef first fill-opacity:0
-	classDef last fill:#bfb6fc
+graph TD
+    __start__([__start__]):::first
+    orchestrator_agent(orchestrator_agent)
+    plan_executor_agent(plan_executor_agent)
+    user_input_agent(user_input_agent)
+    general_agent(general_agent)
+    tts_agent(tts_agent)
+    test_agent(test_agent)
+    __end__([__end__]):::last
+    
+    __start__ --> user_input_agent
+    user_input_agent --> orchestrator_agent
+    orchestrator_agent --> plan_executor_agent
+    plan_executor_agent -.-> general_agent
+    plan_executor_agent -.-> test_agent
+    plan_executor_agent -.-> orchestrator_agent
+    general_agent --> tts_agent
+    test_agent --> plan_executor_agent
+    tts_agent --> __end__
+    
+    classDef default fill:#f2f0ff,line-height:1.2
+    classDef first fill-opacity:0
+    classDef last fill:#bfb6fc
 
 ## Основные компоненты:
 **orchestrator_agent** ("диспетчер"): Принимает текст запроса от STT или сразу текст, использует LLM для его анализа и создания плана - последовательности действий для plan_executor_agent. Использует модель `qwen2.5:7b-instruct-q4_0` с больше ограничениями в конфиге, чем у основной модели.
