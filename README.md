@@ -2,10 +2,10 @@
 
 Данный проект - это локальный голосовой ассистент с открытым исходным кодом, построенный на принципах модульной архитектуры и агентного подхода с использованием LangGraph. Он понимает голосовые команды, планирует их выполнение с помощью LLM и исполняет через подключенные модули, оставаясь при этом полностью оффлайн.
 
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![LangGraph](https://img.shields.io/badge/LangGraph-^0.2.0-orange.svg)](https://github.com/langchain-ai/langgraph)
-[![Ollama](https://img.shields.io/badge/Ollama-Local_LLM-cyan.svg)](https://ollama.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg?style=for-the-badge)](https://python.org)
+[![LangGraph](https://img.shields.io/badge/LangGraph-^0.2.0-orange.svg?style=for-the-badge)](https://github.com/langchain-ai/langgraph)
+[![Ollama](https://img.shields.io/badge/Ollama-Local_LLM-cyan.svg?style=for-the-badge)](https://ollama.com)
+[![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 ## Основные возможности
 - **Изменяемый вид ввода:** При запуске будет выбор между текстовым и голосовым общением. Ответ получаете голосовым и текстовым. Распознавание (STT) и синтез речи (TTS) работают локально.
