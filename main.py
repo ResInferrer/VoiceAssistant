@@ -1,8 +1,11 @@
 from langchain_core.messages import HumanMessage, AIMessage
-from graph.agent_workflow import create_agent_graph
+
+from graph.graph import Graph
+
 
 def main():
-    agent_graph = create_agent_graph()
+
+    agent_graph = Graph.create_agent_graph()
     history = []
 
     while True:
