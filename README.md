@@ -40,7 +40,7 @@
 ### Установка
 1. Клонируйте репозиторий:
 ```bash
-git clone https://github.com/KotingGG/Lerche.git
+git clone https://github.com/ResInferrer/VoiceAssistant.git
 cd Lerche
 ```
 2. Установите Ollama (для локальной LLM): Скачайте и установите с (официального сайта)[https://ollama.com/download].
@@ -76,7 +76,7 @@ uv run main.py
 
 ## Структура проекта
 ```text
-Lerche/
+VoiceAssistant/
 ├── main.py                      # Точка входа, запускает главный цикл ассистента
 ├── graph/                       # Директория с реализациями всех агентов
 │   ├── __init__.py
